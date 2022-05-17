@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>vue2双向数据绑定</title>
+  </head>
+  <body>
+    <input type="text" id="input" v-model="text" />
+    <input type="text" id="input1" v-model="text" />
+    <p id="p" v-text="text"></p>
+    <script>
+      const data = {
+        text: 'This is a test',
+      };
+      const input = document.querySelector('#input');
+      const p = document.querySelector('#p');
+
+      p.innerText = data[p.getAttribute('v-text')];
+      input.addEventListener('input', function (e) {
+        data[input.getAttribute('v-model')] = e.target.value;
+      });
+      input1.addEventListener('input', function (e) {
+        data[input1.getAttribute('v-model')] = e.target.value;
+      });
+      let text = data.text;
+      Object.defineProperty(data, 'text', {
+        get() {
+          return text;
+        },
+        set(val) {
+          text = val;
+          p.innerText = data[p.getAttribute('v-text')];
+          input.value = data[p.getAttribute('v-text')];
+          input1.value = data[p.getAttribute('v-text')];
+        },
+      });
+    </script>
+  </body>
+</html>

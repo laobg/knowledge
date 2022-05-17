@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>vue3双向数据绑定</title>
+  </head>
+  <body>
+    <input type="text" id="input" v-model="text" />
+    <input type="text" id="input1" v-model="text" />
+    <p id="p" v-text="text"></p>
+    <script>
+      const data = {
+        text: 'This is a test',
+      };
+      const input = document.querySelector('#input');
+      const p = document.querySelector('#p');
+
+      let proxyData = new Proxy(data, {
+        get(...rest) {
+          return Reflect.get(...rest);
+        },
+        set(target, prop, value) {
+          if (prop === 'text') {
+            p.innerText = value;
+            input.value = value;
+            input1.value = value;
+          }
+          return Reflect.set(target, prop, value);
+        },
+      });
+
+      p.innerText = proxyData[p.getAttribute('v-text')];
+      input.addEventListener('input', function (e) {
+        proxyData[input.getAttribute('v-model')] = e.target.value;
+      });
+      input1.addEventListener('input', function (e) {
+        proxyData[input1.getAttribute('v-model')] = e.target.value;
+      });
+    </script>
+  </body>
+</html>
